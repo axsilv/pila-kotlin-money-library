@@ -1,2 +1,2 @@
-# pila-kotlin-money-library
+# Pila - Money Library
 Money library for kotlin
