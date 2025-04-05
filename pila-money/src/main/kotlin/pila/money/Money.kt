@@ -1,4 +1,4 @@
-package pila.kotlin.money.library.domain
+package pila.money
 
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -99,4 +99,9 @@ class Money private constructor(
             ) toMoney currency
         }
     }
+
+    fun convert(
+        currency: Currency,
+        rate: BigDecimal,
+    ): Money = (amount * rate).toMoney(currency)
 }

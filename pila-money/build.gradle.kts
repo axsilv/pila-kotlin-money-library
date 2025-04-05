@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.linter)
-    `java-library`
     `maven-publish`
 }
+
+group = "pila.kotlin.money.library"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -25,4 +27,15 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["kotlin"])
+            groupId = "com.pila.money"
+            artifactId = "pila-money"
+            version = "1.0.0"
+        }
+    }
 }

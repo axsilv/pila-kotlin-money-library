@@ -1,4 +1,4 @@
-package pila.kotlin.money.library.domain
+package pila.money
 
 data class Currency(
     val code: String,

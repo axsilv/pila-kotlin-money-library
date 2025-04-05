@@ -1,9 +1,9 @@
-package pila.kotlin.money.library.domain
+package pila.money
 
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
-import pila.kotlin.money.library.domain.Money.Companion.toMoney
+import pila.money.Money.Companion.toMoney
 import java.math.BigDecimal
 
 class MoneyTest :
