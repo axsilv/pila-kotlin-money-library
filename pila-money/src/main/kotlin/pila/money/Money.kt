@@ -1,5 +1,6 @@
 package pila.money
 
+import pila.money.MoneyException.MonetaryOperationSplitException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.math.RoundingMode.HALF_UP
@@ -90,14 +91,32 @@ class Money private constructor(
         val baseCents = totalCents / parts
         val remainder = (totalCents % parts).toInt()
 
-        return List(parts) { partIndex ->
-            val cents = baseCents + if (partIndex < remainder) 1 else 0
-            (
-                BigDecimal(cents)
-                    .divide(BigDecimal(100))
-                    .setScale(2)
-            ) toMoney currency
-        }
+        val result =
+            List(parts) { partIndex ->
+                val cents = baseCents + if (partIndex < remainder) 1 else 0
+                (
+                    BigDecimal(cents)
+                        .divide(BigDecimal(100))
+                        .setScale(2)
+                ) toMoney currency
+            }
+
+        validateSplit(result)
+
+        return result
+    }
+
+    private fun validateSplit(result: List<Money>) {
+        result
+            .map { it.amount }
+            .fold(BigDecimal.ZERO) { acc, item -> acc + item }
+            .let {
+                if (it != amount) {
+                    throw MonetaryOperationSplitException(
+                        "Monetary operation split exception: $it differ $amount",
+                    )
+                }
+            }
     }
 
     fun convert(
