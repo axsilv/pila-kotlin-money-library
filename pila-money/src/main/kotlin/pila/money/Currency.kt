@@ -4,6 +4,7 @@ data class Currency(
     val code: String,
     val displayName: String,
     val symbol: String,
+    val scale: Int = 2,
 ) {
     init {
         require(
@@ -21,5 +22,11 @@ data class Currency(
                 .isBlank()
                 .not(),
         ) { "Symbol must not be empty" }
+
+        require(
+            scale >= 0,
+        ) {
+            "Scale must be equal or greater than 0"
+        }
     }
 }

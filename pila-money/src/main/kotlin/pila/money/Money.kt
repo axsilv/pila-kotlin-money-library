@@ -19,7 +19,11 @@ class Money private constructor(
         infix fun String.toMoney(currency: Currency): Money =
             Money(
                 currency = currency,
-                amount = check(BigDecimal(this)),
+                amount =
+                    check(
+                        BigDecimal(this),
+                        currency,
+                    ),
             )
 
         fun String.toMoney(): Money = this.toMoney(currency = systemCurrency())
@@ -27,7 +31,7 @@ class Money private constructor(
         infix fun BigDecimal.toMoney(currency: Currency): Money =
             Money(
                 currency = currency,
-                amount = check(this),
+                amount = check(this, currency),
             )
 
         fun BigDecimal.toMoney() = this.toMoney(currency = systemCurrency())
@@ -43,11 +47,14 @@ class Money private constructor(
             System.getProperty(name)
                 ?: throw RuntimeException("System env for pila was not found $name")
 
-        private fun check(amount: BigDecimal): BigDecimal {
+        private fun check(
+            amount: BigDecimal,
+            currency: Currency,
+        ): BigDecimal {
             check(
-                amount.scale() == 2,
+                amount.scale() == currency.scale,
             ) {
-                "Monetary amounts must be 2 digit decimal scale"
+                "Monetary amounts must be ${currency.scale} digit decimal scale"
             }
 
             return amount
