@@ -91,12 +91,6 @@ Tests are written with Kotest. To run them:
 ./gradlew test
 ```
 
-## 💡 Philosophy
-
-- No magic: always know where your values come from.
-- Safety first: no operations between different currencies.
-- Precision guaranteed: BigDecimal everywhere, exact scale.
-
 ## 🛠️ Roadmap
 
 - Currency conversion

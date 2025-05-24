@@ -2,6 +2,7 @@ package pila.money
 
 import pila.money.MoneyException.MonetaryOperationSplitException
 import java.math.BigDecimal
+import java.math.BigDecimal.ZERO
 import java.math.RoundingMode
 import java.math.RoundingMode.HALF_UP
 
@@ -98,25 +99,19 @@ class Money private constructor(
         val baseCents = totalCents / parts
         val remainder = (totalCents % parts).toInt()
 
-        val result =
-            List(parts) { partIndex ->
-                val cents = baseCents + if (partIndex < remainder) 1 else 0
-                (
-                    BigDecimal(cents)
-                        .divide(BigDecimal(100))
-                        .setScale(2)
-                ) toMoney currency
-            }
-
-        validateSplit(result)
-
-        return result
+        return List(parts) { partIndex ->
+            val cents = baseCents + if (partIndex < remainder) 1 else 0
+            (
+                BigDecimal(cents)
+                    .divide(BigDecimal(100))
+                    .setScale(2)
+            ) toMoney currency
+        }.also { it.validateSplit() }
     }
 
-    private fun validateSplit(result: List<Money>) {
-        result
-            .map { it.amount }
-            .fold(BigDecimal.ZERO) { acc, item -> acc + item }
+    private fun List<Money>.validateSplit() =
+        map { it.amount }
+            .fold(ZERO) { acc, item -> acc + item }
             .let {
                 if (it != amount) {
                     throw MonetaryOperationSplitException(
@@ -124,7 +119,6 @@ class Money private constructor(
                     )
                 }
             }
-    }
 
     fun convert(
         currency: Currency,
