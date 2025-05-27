@@ -1,7 +1,7 @@
 package pila.money
 
 val BRL =
-    Currency(
+    MonetaryCurrency(
         code = "BRL",
         displayName = "real",
         symbol = "R$",

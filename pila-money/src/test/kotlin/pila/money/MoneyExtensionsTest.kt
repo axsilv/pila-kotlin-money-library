@@ -9,8 +9,8 @@ import java.math.BigDecimal
 class MoneyExtensionsTest :
     DescribeSpec({
 
-        val usd = Currency("USD", "US Dollar", "$", 2)
-        val eur = Currency("EUR", "Euro", "€", 2)
+        val usd = MonetaryCurrency("USD", "US Dollar", 2, "$")
+        val eur = MonetaryCurrency("EUR", "Euro", 2, "€")
 
         describe("List<Money>.average") {
 

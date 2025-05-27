@@ -8,34 +8,34 @@ class CurrencyTest :
     DescribeSpec({
         describe("Currency") {
             it("Should create a valid Currency") {
-                val currency =
-                    Currency(
+                val monetaryCurrency =
+                    MonetaryCurrency(
                         code = "USD",
                         displayName = "US Dollar",
                         symbol = "$",
                         scale = 2,
                     )
 
-                currency.code shouldBe "USD"
-                currency.displayName shouldBe "US Dollar"
-                currency.symbol shouldBe "$"
-                currency.scale shouldBe 2
+                monetaryCurrency.code shouldBe "USD"
+                monetaryCurrency.displayName shouldBe "US Dollar"
+                monetaryCurrency.symbol shouldBe "$"
+                monetaryCurrency.scale shouldBe 2
             }
 
             it("Should default scale to 2 if not provided") {
-                val currency =
-                    Currency(
+                val monetaryCurrency =
+                    MonetaryCurrency(
                         code = "EUR",
                         displayName = "Euro",
                         symbol = "€",
                     )
 
-                currency.scale shouldBe 2
+                monetaryCurrency.scale shouldBe 2
             }
 
             it("Should throw if code is not 3 uppercase letters") {
                 shouldThrow<IllegalArgumentException> {
-                    Currency(
+                    MonetaryCurrency(
                         code = "usd",
                         displayName = "US Dollar",
                         symbol = "$",
@@ -43,7 +43,7 @@ class CurrencyTest :
                 }.message shouldBe "Currency code must be 3 uppercase letters"
 
                 shouldThrow<IllegalArgumentException> {
-                    Currency(
+                    MonetaryCurrency(
                         code = "US",
                         displayName = "US Dollar",
                         symbol = "$",
@@ -51,7 +51,7 @@ class CurrencyTest :
                 }.message shouldBe "Currency code must be 3 uppercase letters"
 
                 shouldThrow<IllegalArgumentException> {
-                    Currency(
+                    MonetaryCurrency(
                         code = "USDE",
                         displayName = "US Dollar",
                         symbol = "$",
@@ -61,7 +61,7 @@ class CurrencyTest :
 
             it("should throw if display name is blank") {
                 shouldThrow<IllegalArgumentException> {
-                    Currency(
+                    MonetaryCurrency(
                         code = "USD",
                         displayName = "   ",
                         symbol = "$",
@@ -71,7 +71,7 @@ class CurrencyTest :
 
             it("should throw if symbol is blank") {
                 shouldThrow<IllegalArgumentException> {
-                    Currency(
+                    MonetaryCurrency(
                         code = "USD",
                         displayName = "US Dollar",
                         symbol = " ",
@@ -81,7 +81,7 @@ class CurrencyTest :
 
             it("should throw if scale is negative") {
                 shouldThrow<IllegalArgumentException> {
-                    Currency(
+                    MonetaryCurrency(
                         code = "USD",
                         displayName = "US Dollar",
                         symbol = "$",

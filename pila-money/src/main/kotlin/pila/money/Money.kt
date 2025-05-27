@@ -13,9 +13,10 @@ private const val PILA_CURRENCY_DISPLAY_NAME = "pila.currency.displayName"
 private const val PILA_CURRENCY_SYMBOL = "pila.currency.symbol"
 
 class Money private constructor(
-    val currency: Currency,
-    val amount: BigDecimal,
-) {
+    override val currency: Currency,
+    override val amount: BigDecimal,
+) : Monetary,
+    MonetaryOperations<Money> {
     companion object {
         infix fun String.toMoney(currency: Currency): Money =
             Money(
@@ -37,8 +38,8 @@ class Money private constructor(
 
         fun BigDecimal.toMoney() = this.toMoney(currency = systemCurrency())
 
-        private fun systemCurrency(): Currency =
-            Currency(
+        private fun systemCurrency(): MonetaryCurrency =
+            MonetaryCurrency(
                 code = fromEnv(PILA_CURRENCY_CODE),
                 displayName = fromEnv(PILA_CURRENCY_DISPLAY_NAME),
                 symbol = fromEnv(PILA_CURRENCY_SYMBOL),
@@ -62,7 +63,7 @@ class Money private constructor(
         }
     }
 
-    infix fun sum(secondAmount: Money): Money {
+    override infix fun sum(secondAmount: Money): Money {
         require(currency.code == secondAmount.currency.code) {
             "Cannot sum different currencies: ${currency.code} and ${secondAmount.currency.code}"
         }
@@ -73,7 +74,7 @@ class Money private constructor(
         )
     }
 
-    infix fun minus(secondAmount: Money): Money {
+    override infix fun minus(secondAmount: Money): Money {
         require(currency.code == secondAmount.currency.code) {
             "Cannot minus different currencies: ${currency.code} and ${secondAmount.currency.code}"
         }
@@ -84,7 +85,7 @@ class Money private constructor(
         )
     }
 
-    fun display() = "${currency.symbol} $amount ${currency.code}"
+    override fun display() = "${currency.symbol} $amount ${currency.code}"
 
     fun toCents(roundingMode: RoundingMode = HALF_UP): Long =
         amount
@@ -92,7 +93,7 @@ class Money private constructor(
             .multiply(BigDecimal("100"))
             .longValueExact()
 
-    infix fun split(parts: Int): List<Money> {
+    override infix fun split(parts: Int): List<Money> {
         require(parts > 0) { "Number of parts must be positive" }
 
         val totalCents = this.toCents()
@@ -104,7 +105,7 @@ class Money private constructor(
             (
                 BigDecimal(cents)
                     .divide(BigDecimal(100))
-                    .setScale(2)
+                    .setScale(currency.scale)
             ) toMoney currency
         }.also { it.validateSplit() }
     }
@@ -120,7 +121,7 @@ class Money private constructor(
                 }
             }
 
-    fun convert(
+    override fun convert(
         currency: Currency,
         rate: BigDecimal,
     ): Money = (amount * rate).toMoney(currency)
