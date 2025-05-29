@@ -1,7 +1,5 @@
 package pila.money
 
-import java.math.BigDecimal
-
 interface MonetaryOperations<T : Monetary> {
     infix fun sum(secondAmount: T): T
 
@@ -10,9 +8,4 @@ interface MonetaryOperations<T : Monetary> {
     fun display(): String
 
     infix fun split(parts: Int): List<T>
-
-    fun convert(
-        currency: Currency,
-        rate: BigDecimal,
-    ): T
 }

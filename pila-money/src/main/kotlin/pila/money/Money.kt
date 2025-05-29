@@ -120,9 +120,4 @@ class Money private constructor(
                     )
                 }
             }
-
-    override fun convert(
-        currency: Currency,
-        rate: BigDecimal,
-    ): Money = (amount * rate).toMoney(currency)
 }
